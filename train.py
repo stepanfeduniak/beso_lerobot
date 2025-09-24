@@ -9,7 +9,7 @@ from lerobot.configs.policies import PreTrainedConfig
 from lerobot.configs.train import TrainPipelineConfig
 from lerobot.datasets.lerobot_dataset import LeRobotDatasetMetadata
 from lerobot.policies import factory 
-from beso_lerobot.policies.BESO.beso_config import BesoConfig
+from policies.BESO.beso_config import BesoConfig
 
 
 def train(data_dir="data"):
@@ -46,7 +46,7 @@ def train(data_dir="data"):
     init_logging()
     train(cfg)
 def get_beso(typename: str, **kwargs):
-    from beso_lerobot.policies.BESO.modelling_beso import BesoPolicy
+    from policies.BESO.modelling_beso import BesoPolicy
     return BesoPolicy
 def get_wandb_config():
     wandb_config = WandBConfig(
