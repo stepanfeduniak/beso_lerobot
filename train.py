@@ -10,11 +10,12 @@ from lerobot.configs.train import TrainPipelineConfig
 from lerobot.datasets.lerobot_dataset import LeRobotDatasetMetadata
 from lerobot.policies import factory 
 from policies.BESO.beso_config import BesoConfig
+from lerobot.scripts.train import init_logging
+from lerobot.scripts.train import train as lerobot_train
 
 
 def train(data_dir="data"):
     print("\nStarting training...")
-    from lerobot.scripts.train import init_logging, train
     dataset_cfg = DatasetConfig(repo_id="my_dataset", root=data_dir)
     default_kwargs = {
                 "vision_backbone": "resnet34",
@@ -44,7 +45,7 @@ def train(data_dir="data"):
     )
 
     init_logging()
-    train(cfg)
+    lerobot_train(cfg)
 def get_beso(typename: str, **kwargs):
     from policies.BESO.modelling_beso import BesoPolicy
     return BesoPolicy

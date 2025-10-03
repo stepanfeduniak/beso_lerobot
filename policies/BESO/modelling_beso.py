@@ -234,16 +234,6 @@ class BesoModel(nn.Module):
 
 
     def generate_actions(self, batch: dict[str, Tensor]) -> Tensor:
-        """
-        This function expects `batch` to have:
-        {
-            "observation.state": (B, n_obs_steps, state_dim)
-
-            "observation.images": (B, n_obs_steps, num_cameras, C, H, W)
-                AND/OR
-            "observation.environment_state": (B, n_obs_steps, environment_dim)
-        }
-        """
         batch_size, n_obs_steps = batch["observation.state"].shape[:2]
         assert n_obs_steps == self.config.n_obs_steps
         # Encode image features and concatenate them all together along with the state vector.
@@ -296,18 +286,11 @@ class BesoModel(nn.Module):
         return loss
     
     def get_scalings(self, sigma):
-        """
-        Compute the scalings for the denoising process.
-
-        Args:
-            sigma: The input sigma.
-        Returns:
-            The computed scalings for skip connections, output, and input.
-        """
         c_skip = self.sigma_data**2 / (sigma**2 + self.sigma_data**2)
         c_out = sigma * self.sigma_data / (sigma**2 + self.sigma_data**2)**0.5
         c_in = 1 / (sigma**2 + self.sigma_data**2)**0.5
         return c_skip, c_out, c_in
+    
     def forward(self, state, action, goal, sigma):
         c_skip, c_out, c_in = [append_dims(x, action.ndim) for x in self.get_scalings(sigma)]
         return self.dit_backbone(state, action * c_in, goal, sigma) * c_out + action * c_skip

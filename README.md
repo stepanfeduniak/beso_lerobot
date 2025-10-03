@@ -20,3 +20,5 @@ python train.py --data_dir /path/to/dataset
 ```bash
 pip install -e .
 ```
+
+## Current Structure works for Lerobot 3.
